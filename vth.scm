@@ -1,6 +1,9 @@
 #!/usr/bin/env gosh
-(use srfi-1)
-(use srfi-13)
+(define-module vth
+  (use srfi-1)
+  (use srfi-13)
+  (export vth))
+(select-module vth)
 
 (define (line->xy line)
   ;;(line->xy " 3 4")
@@ -44,15 +47,13 @@
 
 
 
-(define (main args)
-  (let ((file  (second args))
-        (point (x->number (third  args))))
-    (let ((xydata
-           (with-input-from-file file
-             (lambda ()
-               (port-map
-                (lambda (line)
-                  (line->xy line))
-                read-line)))))
-      (apply print (map (lambda (p) (linear-xpoint p point))
-                  (around-points xydata point))))))
+(define (vth file point)
+  (let ((xydata
+         (with-input-from-file file
+           (lambda ()
+             (port-map
+              (lambda (line)
+                (line->xy line))
+              read-line)))))
+    (map (lambda (p) (linear-xpoint p point))
+         (around-points xydata point))))
